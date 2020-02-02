@@ -18,6 +18,9 @@ fileConfig(config.config_file_name)
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 
+import sys
+sys.path = ['', '..'] + sys.path[1:]
+
 from cheatsheet.models.basics import Base
 target_metadata = Base.metadata
 
