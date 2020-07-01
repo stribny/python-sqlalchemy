@@ -5,8 +5,9 @@ from sqlalchemy import create_engine
 HOSTNAME = 'localhost'
 DATABASE = 'cheatsheet'
 USER = 'root'
-PASSWORD = ''
+PASSWORD = 'root'
 CONNECTION_STRING = f'mysql+mysqlconnector://{USER}:{PASSWORD}@{HOSTNAME}:3306/{DATABASE}'
+
 
 Session = sessionmaker()
 engine = create_engine(CONNECTION_STRING)
