@@ -12,7 +12,7 @@ poetry shell
 
 Then apply Alembic migrations:
 ```bash
-
+cd cheatsheet && alembic upgrade head
 ```
 
 ## Working with Alembic
