@@ -107,6 +107,7 @@ class Poll(Base):
     #   voters yet associated with the poll
     n_voters = column_property(
         select([coalesce(func.count(Voter.id), 0)])
+        .correlate_except(Voter)
     )
 ```
 
