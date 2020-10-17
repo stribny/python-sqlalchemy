@@ -45,6 +45,14 @@ Generated migrations needs to be applied to the database. Alembic will only appl
 alembic upgrade head
 ```
 
+## Alternatives to using Alembic
+
+### nomad
+
+In case Alembic doesn't work well for us, we can use a simple migration tool [nomad](https://pypi.org/project/nomad/) that works with plain Python scripts and SQL files.
+
+One possible workflow could be to use Alembic to only generate initial migration SQL based on the diff between our models and a database, but store and run migrations using nomad.
+
 ## Creating Session object
 
 `Session` is basic object that is tied to our SQL connection and will allow us to run various ORM commands as a *Unit of Work*.
@@ -61,9 +69,46 @@ Session.configure(bind=engine)
 
 ## Defining SQLAlchemy models
 
+There are two basic ways to define our models in SQLAlchemy:
+- subclassing from `Base` class
+- using classical mapping through `MetaData` object
+
 ## Basic attributes
 
 ## Relationships
+
+Relationships are defined using `relationship` function.
+
+When we define relationships, we need to choose a loading strategy that SQLAlchemy will use to load relevant objects into memory. There are two basic loading strategies:
+- lazy loading (default)
+- eager loading
+
+## Column property
+
+Column properties can be used for automatically computed columns.
+
+For instance, if we have a `Poll` with multiple `Voter`s, we can automatically expose the number
+of voters in the `Poll` object:
+
+```python
+import sqlalchemy as sa
+from sqlalchemy import select, func
+from sqlalchemy.orm import column_property
+from sqlalchemy.sql.functions import coalesce
+
+class Voter(Base):
+    id = Column(sa.BigInteger, autoincrement=True, primary_key=True, index=True)
+    poll_id = Column(sa.BigInteger, ForeignKey("polls.id"), nullable=False)
+
+class Poll(Base):
+    id = Column(sa.BigInteger, autoincrement=True, primary_key=True, index=True)
+    voters = sa.relationship("Voter", backref="poll")
+    # coalesce will handle the situation where there aren't any
+    #   voters yet associated with the poll
+    n_voters = column_property(
+        select([coalesce(func.count(Voter.id), 0)])
+    )
+```
 
 ## Querying data
 

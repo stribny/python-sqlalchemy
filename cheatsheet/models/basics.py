@@ -7,6 +7,12 @@ from cheatsheet import Session
 Base = declarative_base()
 
 
+# Big integer support for SQLite:
+# from sqlalchemy.dialects import sqlite
+# from sqlalchemy.sql.sqltypes import BigInteger
+# BigInt = BigInteger().with_variant(sqlite.INTEGER(), "sqlite")
+
+
 class World(Base):
     """Defines various different data types"""
     # how the table is named in the database
